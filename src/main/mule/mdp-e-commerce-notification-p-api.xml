@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="c59c8388-f4ec-4d94-bd49-7d9f01d10ace" environment="${env}" />
+	<flow name="notificationsSchedulerFlow" doc:id="b9b356d5-0c39-4afd-aa22-cb41fd615b96" >
+		<scheduler doc:name="Scheduler" doc:id="c1b6ec8a-2e4d-44e4-88b4-09283db6901d" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="24" timeUnit="HOURS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<json-logger:logger doc:name="Start Logger" doc:id="13cd2c13-d0c8-4cfe-9bea-bd1af67b74f6" config-ref="JSON_Logger_Config" message="Start of notificationsSchedulerFlow"/>
+		<ee:transform doc:name="Transform Message" doc:id="930e11a7-cd12-47d3-a21f-c764bf418d1d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="8bb29c52-4e9c-4465-8105-88089f67365e" config-ref="JSON_Logger_Config" message="End of notificationsSchedulerFlow" tracePoint="END"/>
+		<error-handler ref="comon-error-handler" />
+	
+
+</flow>
+	</mule>
